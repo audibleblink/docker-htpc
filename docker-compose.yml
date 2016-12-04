@@ -1,0 +1,64 @@
+version: "2"
+services:
+
+  proxy:
+    build: 
+      context: "./nginx/"
+    container_name: nginx
+    restart: always
+    ports:
+      - "24765:80"
+
+  portal:
+    build:
+      context: "./portal/"
+    container_name: portal
+    restart: always
+
+  sabnzbd:
+    image: "timhaak/sabnzbd"
+    container_name: sabnzbd
+    restart: always
+    volumes:
+      - /mnt/nas/htpc_config/sabnzbd:/config
+      - /mnt/nas/media:/data
+    environment:
+      - UID=<$USERID>
+      - GID=<$USERID>
+    expose:
+      - 8080
+      - 9090
+
+  sonarr:
+    image: "timhaak/sonarr-alpine"
+    container_name: sonarr
+    restart: always
+    volumes:
+      - /mnt/nas/htpc_config/sabnzbd:/config
+      - /mnt/nas/media:/data
+    expose:
+      - 8989
+
+  couchpotato:
+    image: "timhaak/couchpotato"
+    container_name: couchpotato
+    restart: always
+    volumes:
+      - /mnt/nas/htpc_config/couchpotato:/config
+      - /mnt/nas/media:/data
+    expose:
+      - 5050
+
+  plex:
+    image: "timhaak/plex"
+    container_name: plex
+    restart: unless-stopped
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /mnt/nas/htpc_config/plex:/config
+      - /mnt/nas/media:/data
+    ports:
+      - "32400:32400"
+    environment:
+      - PLEX_USERNAME=<$USERNAME>
+      - PLEX_PASSWORD=<$PASSWORD>
