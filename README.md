@@ -5,7 +5,9 @@ along with a simple portal interface and reverse proxy server.
 
 ## Setup
 
-To set up all the containers, just run:
+1. Substitute all the variables in `docker-compose` with your information.
+
+2. To set up all the containers, just run:
 
 ```sh
 docker-compose up -d
